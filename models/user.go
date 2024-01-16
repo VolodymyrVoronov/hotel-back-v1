@@ -4,20 +4,24 @@ import (
 	"errors"
 	"hotel-back-v1/db"
 	"hotel-back-v1/utils"
+	"time"
 )
 
 type User struct {
-	ID       int64
-	Email    string `binding:"required"`
-	Password string `binding:"required"`
+	ID        int64
+	Email     string `binding:"required"`
+	Password  string `binding:"required"`
+	Role      string `binding:"required"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
-func (u *User) Save() error {
+func (u *User) InsertUser() error {
 	query := `
 		INSERT INTO users
-			(email, password)
+			(email, password, created_at, updated_at)
 		VALUES
-			(?, ?)
+			(?, ?, ?, ?)
 	`
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
@@ -30,7 +34,7 @@ func (u *User) Save() error {
 		return err
 	}
 
-	result, err := stmt.Exec(u.Email, hashedPassword)
+	result, err := stmt.Exec(u.Email, hashedPassword, time.Now(), time.Now())
 	if err != nil {
 		return err
 	}

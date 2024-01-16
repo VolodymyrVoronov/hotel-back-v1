@@ -33,4 +33,34 @@ func InitDB() {
 	createTables()
 }
 
-func createTables() {}
+func createTables() {
+	createRolesTable := `
+		CREATE TABLE IF NOT EXISTS roles (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			role_type TEXT NOT NULL UNIQUE,
+			created_at DATETIME NOT NULL,
+			updated_at DATETIME NOT NULL
+		);
+	`
+	_, err := DB.Exec(createRolesTable)
+	if err != nil {
+		fmt.Println("Error creating roles table.")
+		panic(err)
+	}
+
+	createUsersTable := `
+		CREATE TABLE IF NOT EXISTS users (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			email TEXT NOT NULL UNIQUE,
+			password TEXT NOT NULL,
+			role_type TEXT NOT NULL,
+			created_at DATETIME NOT NULL,
+			updated_at DATETIME	NOT NULL
+		);
+	`
+	_, err = DB.Exec(createUsersTable)
+	if err != nil {
+		fmt.Println("Error creating users table.")
+		panic(err)
+	}
+}

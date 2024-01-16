@@ -21,5 +21,14 @@ func Authenticate(c *gin.Context) {
 		return
 	}
 
+	userId, err := utils.GetUserIDFromToken(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Set("token", token)
+	c.Set("userId", userId)
+
 	c.Next()
 }

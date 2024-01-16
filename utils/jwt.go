@@ -52,29 +52,29 @@ func ValidateToken(tokenStr string) error {
 	return nil
 }
 
-// func GetUserIDFromToken(tokenStr string) (int64, error) {
-// 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-// 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-// 			return nil, errors.New("unexpected signing method")
-// 		}
+func GetUserIDFromToken(tokenStr string) (int64, error) {
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
 
-// 		return []byte(secretKey), nil
-// 	})
+		return []byte(secretKey), nil
+	})
 
-// 	if err != nil {
-// 		return 0, err
-// 	}
+	if err != nil {
+		return 0, err
+	}
 
-// 	if !token.Valid {
-// 		return 0, errors.New("invalid token")
-// 	}
+	if !token.Valid {
+		return 0, errors.New("invalid token")
+	}
 
-// 	claims, ok := token.Claims.(jwt.MapClaims)
-// 	if !ok {
-// 		return 0, errors.New("invalid token")
-// 	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return 0, errors.New("invalid token")
+	}
 
-// 	userId := claims["userId"].(float64)
+	userId := claims["userId"].(float64)
 
-// 	return int64(userId), nil
-// }
+	return int64(userId), nil
+}
