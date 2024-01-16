@@ -63,4 +63,26 @@ func createTables() {
 		fmt.Println("Error creating users table.")
 		panic(err)
 	}
+
+	createBookingsTable := `
+		CREATE TABLE IF NOT EXISTS rooms (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			room_id TEXT NOT NULL,
+			room_price INTEGER NOT NULL,
+			name TEXT NOT NULL,
+			email TEXT NOT NULL,
+			phone TEXT NOT NULL,
+			message TEXT NOT NULL,
+			start_date DATETIME NOT NULL,
+			end_date DATETIME NOT NULL,
+			processed BOOLEAN NOT NULL,
+			created_at DATETIME NOT NULL,
+			updated_at DATETIME NOT NULL
+		);
+	`
+	_, err = DB.Exec(createBookingsTable)
+	if err != nil {
+		fmt.Println("Error creating bookings table.")
+		panic(err)
+	}
 }
