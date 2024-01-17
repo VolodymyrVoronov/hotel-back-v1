@@ -32,9 +32,9 @@ type BookedRoom struct {
 }
 
 type RoomAvailability struct {
-	RoomID    string
-	StartDate string
-	EndDate   string
+	RoomID    string `binding:"required"`
+	StartDate string `binding:"required"`
+	EndDate   string `binding:"required"`
 }
 
 func (b *Booking) InsertBooking() error {
