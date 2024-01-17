@@ -85,4 +85,20 @@ func createTables() {
 		fmt.Println("Error creating bookings table.")
 		panic(err)
 	}
+
+	createBookedRoomsTable := `
+		CREATE TABLE IF NOT EXISTS booked_rooms (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			room_id TEXT NOT NULL,
+			start_date DATETIME NOT NULL,
+			end_date DATETIME NOT NULL,
+			created_at DATETIME NOT NULL,
+			updated_at DATETIME NOT NULL
+		);
+	`
+	_, err = DB.Exec(createBookedRoomsTable)
+	if err != nil {
+		fmt.Println("Error creating booked_rooms table.")
+		panic(err)
+	}
 }

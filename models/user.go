@@ -8,10 +8,11 @@ import (
 )
 
 type User struct {
-	ID        int64
-	Email     string `binding:"required"`
-	Password  string `binding:"required"`
-	Role      string `binding:"required"`
+	ID       int64
+	Email    string `binding:"required"`
+	Password string `binding:"required"`
+	Role     string `binding:"required"`
+
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

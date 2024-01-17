@@ -7,10 +7,15 @@ import (
 )
 
 func RegisterRoutes(server *gin.Engine) {
+	server.POST("/bookings", CreateBooking)
+	server.GET("/bookings", GetBookings)
+
+	server.POST("/availability", CheckAvailability)
+
 	server.POST("/roles", CreateRole)
 	server.GET("/roles", GetRoles)
 
-	server.POST("/signup", Signup)
+	server.POST("/register", Register)
 	server.POST("/login", Login)
 
 	authenticated := server.Group("/admin")
