@@ -119,7 +119,7 @@ func SearchAvailabilityByDatesByRoomID(roomID string, startDate string, endDate 
 		WHERE 
 			room_id = ? AND
 			(? < end_date AND ? > start_date) OR 
-      (start_date = ? AND end_date = ?)
+      (start_date = ? OR end_date = ?)
 	`
 
 	row := db.DB.QueryRow(query, roomID, startDate, endDate, startDate, endDate)
