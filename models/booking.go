@@ -39,7 +39,7 @@ type RoomAvailability struct {
 
 func (b *Booking) InsertBooking() error {
 	query := `
-		INSERT INTO rooms
+		INSERT INTO bookings
 			(room_id, room_price, name, email, phone, message, start_date, end_date, processed, created_at, updated_at)
 		VALUES
 			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -61,7 +61,7 @@ func (b *Booking) InsertBooking() error {
 
 func (br *BookedRoom) InsertBookedRoom() error {
 	query := `
-		INSERT INTO booked_rooms
+		INSERT INTO bookings_rooms
 			(room_id, start_date, end_date, created_at, updated_at)
 		VALUES
 			(?, ?, ?, ?, ?)
@@ -86,7 +86,7 @@ func SelectAllBookings() ([]Booking, error) {
 		SELECT 
 			id, room_id, room_price, name, email, phone, message, start_date, end_date, processed, created_at, updated_at
 		FROM 
-			rooms
+			bookings
 	`
 
 	rows, err := db.DB.Query(query)
@@ -115,7 +115,7 @@ func SearchAvailabilityByDatesByRoomID(roomID string, startDate string, endDate 
 		SELECT 
 			count(id)
 		FROM 
-			booked_rooms
+			bookings_rooms
 		WHERE 
 			room_id = ? AND
 			(? < end_date AND ? > start_date) OR 
