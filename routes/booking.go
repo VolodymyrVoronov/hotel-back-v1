@@ -50,6 +50,24 @@ func GetBookings(c *gin.Context) {
 	c.JSON(http.StatusOK, bookings)
 }
 
+func GetBooking(c *gin.Context) {
+	var booking models.BookedRoomID
+
+	err := c.ShouldBindJSON(&booking)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	bookedRoom, err := models.SearchSelectedRoomByRoomID(booking.RoomID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, bookedRoom)
+}
+
 func CheckAvailability(c *gin.Context) {
 	var roomAvailability models.RoomAvailability
 

@@ -31,6 +31,10 @@ type BookedRoom struct {
 	UpdatedAt time.Time
 }
 
+type BookedRoomID struct {
+	RoomID string `binding:"required"`
+}
+
 type RoomAvailability struct {
 	RoomID    string `binding:"required"`
 	StartDate string `binding:"required"`
@@ -99,7 +103,9 @@ func SelectAllBookings() ([]Booking, error) {
 
 	for rows.Next() {
 		var booking Booking
+
 		err = rows.Scan(&booking.ID, &booking.RoomID, &booking.RoomPrice, &booking.Name, &booking.Email, &booking.Phone, &booking.Message, &booking.StartDate, &booking.EndDate, &booking.Processed, &booking.CreatedAt, &booking.UpdatedAt)
+
 		if err != nil {
 			return nil, err
 		}
@@ -132,4 +138,37 @@ func SearchAvailabilityByDatesByRoomID(roomID string, startDate string, endDate 
 	}
 
 	return id == 0, nil
+}
+
+func SearchSelectedRoomByRoomID(roomID string) ([]BookedRoom, error) {
+	query := `
+		SELECT 
+			id, room_id, start_date, end_date, created_at, updated_at
+		FROM 
+			bookings_rooms
+		WHERE 
+			room_id = ?
+	`
+
+	rows, err := db.DB.Query(query, roomID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var bookedRooms []BookedRoom
+
+	for rows.Next() {
+		var bookedRoom BookedRoom
+
+		err = rows.Scan(&bookedRoom.ID, &bookedRoom.RoomID, &bookedRoom.StartDate, &bookedRoom.EndDate, &bookedRoom.CreatedAt, &bookedRoom.UpdatedAt)
+
+		if err != nil {
+			return nil, err
+		}
+
+		bookedRooms = append(bookedRooms, bookedRoom)
+	}
+
+	return bookedRooms, nil
 }
