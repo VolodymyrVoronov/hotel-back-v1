@@ -8,10 +8,10 @@ import (
 
 func RegisterRoutes(server *gin.Engine) {
 	server.POST("/bookings", CreateBooking)
-	server.GET("/bookings", GetBookings)
-	server.POST("/bookings-room", GetBooking)
+	server.GET("/bookings", GetAllBookings)
+	server.POST("/bookings-room", GetSelectedBooking)
 
-	server.POST("/availability", CheckAvailability)
+	server.POST("/availability", CheckRoomAvailability)
 
 	server.POST("/roles", CreateRole)
 	server.GET("/roles", GetRoles)

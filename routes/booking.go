@@ -40,7 +40,7 @@ func CreateBooking(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Booking created successfully"})
 }
 
-func GetBookings(c *gin.Context) {
+func GetAllBookings(c *gin.Context) {
 	bookings, err := models.SelectAllBookings()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -50,7 +50,7 @@ func GetBookings(c *gin.Context) {
 	c.JSON(http.StatusOK, bookings)
 }
 
-func GetBooking(c *gin.Context) {
+func GetSelectedBooking(c *gin.Context) {
 	var booking models.BookedRoomID
 
 	err := c.ShouldBindJSON(&booking)
@@ -68,7 +68,7 @@ func GetBooking(c *gin.Context) {
 	c.JSON(http.StatusOK, bookedRoom)
 }
 
-func CheckAvailability(c *gin.Context) {
+func CheckRoomAvailability(c *gin.Context) {
 	var roomAvailability models.RoomAvailability
 
 	err := c.ShouldBindJSON(&roomAvailability)
