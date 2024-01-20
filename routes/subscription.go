@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"hotel-back-v1/models"
 	"hotel-back-v1/services"
-	"log"
 	"net/http"
 	"net/mail"
 
@@ -25,8 +24,6 @@ func RegisterSubscription(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	log.Println(isSubscriptionExist)
 
 	if isSubscriptionExist {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "You are already subscribed to our newsletter"})
