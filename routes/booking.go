@@ -17,6 +17,18 @@ func CreateBooking(c *gin.Context) {
 		return
 	}
 
+	isRoomAvailable, err := models.SearchAvailabilityByDatesByRoomID(booking.RoomID, booking.StartDate, booking.EndDate)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if !isRoomAvailable {
+		c.JSON(http.StatusOK, gin.H{"message": "Room not available", "booked": false})
+		return
+	}
+
 	err = booking.InsertBooking()
 	if err != nil {
 
@@ -37,7 +49,7 @@ func CreateBooking(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Booking created successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Booking created successfully", "booked": true})
 }
 
 func GetAllBookings(c *gin.Context) {

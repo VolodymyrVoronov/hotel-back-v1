@@ -6,16 +6,18 @@ import (
 )
 
 type Booking struct {
-	ID        int64
-	RoomID    string `binding:"required"`
-	RoomPrice int64  `binding:"required"`
-	Name      string `binding:"required"`
-	Email     string `binding:"required"`
-	Phone     string `binding:"required"`
-	Message   string `binding:"required"`
-	StartDate string `binding:"required"`
-	EndDate   string `binding:"required"`
-	Processed bool
+	ID              int64
+	RoomID          string `binding:"required"`
+	RoomPrice       int64  `binding:"required"`
+	TotalPrice      int64  `binding:"required"`
+	TotalBookedDays int64  `binding:"required"`
+	Name            string `binding:"required"`
+	Email           string `binding:"required"`
+	Phone           string `binding:"required"`
+	Message         string `binding:"required"`
+	StartDate       string `binding:"required"`
+	EndDate         string `binding:"required"`
+	Processed       bool
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -44,9 +46,9 @@ type RoomAvailability struct {
 func (b *Booking) InsertBooking() error {
 	query := `
 		INSERT INTO bookings
-			(room_id, room_price, name, email, phone, message, start_date, end_date, processed, created_at, updated_at)
+			(room_id, room_price, total_price, total_booked_days, name, email, phone, message, start_date, end_date, processed, created_at, updated_at)
 		VALUES
-			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`
 
 	stmt, err := db.DB.Prepare(query)
@@ -55,7 +57,7 @@ func (b *Booking) InsertBooking() error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(b.RoomID, b.RoomPrice, b.Name, b.Email, b.Phone, b.Message, b.StartDate, b.EndDate, b.Processed, time.Now(), time.Now())
+	_, err = stmt.Exec(b.RoomID, b.RoomPrice, b.TotalPrice, b.TotalBookedDays, b.Name, b.Email, b.Phone, b.Message, b.StartDate, b.EndDate, b.Processed, time.Now(), time.Now())
 	if err != nil {
 		return err
 	}
@@ -88,7 +90,7 @@ func (br *BookedRoom) InsertBookedRoom() error {
 func SelectAllBookings() ([]Booking, error) {
 	query := `
 		SELECT 
-			id, room_id, room_price, name, email, phone, message, start_date, end_date, processed, created_at, updated_at
+			id, room_id, room_price, total_price, total_booked_days, name, email, phone, message, start_date, end_date, processed, created_at, updated_at
 		FROM 
 			bookings
 	`
@@ -104,7 +106,7 @@ func SelectAllBookings() ([]Booking, error) {
 	for rows.Next() {
 		var booking Booking
 
-		err = rows.Scan(&booking.ID, &booking.RoomID, &booking.RoomPrice, &booking.Name, &booking.Email, &booking.Phone, &booking.Message, &booking.StartDate, &booking.EndDate, &booking.Processed, &booking.CreatedAt, &booking.UpdatedAt)
+		err = rows.Scan(&booking.ID, &booking.RoomID, &booking.RoomPrice, &booking.TotalPrice, &booking.TotalBookedDays, &booking.Name, &booking.Email, &booking.Phone, &booking.Message, &booking.StartDate, &booking.EndDate, &booking.Processed, &booking.CreatedAt, &booking.UpdatedAt)
 
 		if err != nil {
 			return nil, err

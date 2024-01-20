@@ -69,6 +69,8 @@ func createTables() {
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			room_id TEXT NOT NULL,
 			room_price INTEGER NOT NULL,
+			total_price INTEGER NOT NULL,
+			total_booked_days INTEGER NOT NULL,
 			name TEXT NOT NULL,
 			email TEXT NOT NULL,
 			phone TEXT NOT NULL,
