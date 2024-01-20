@@ -10,13 +10,16 @@ func SendMail(addr, from, subject, body string, to []string) error {
 	r := strings.NewReplacer("\r\n", "", "\r", "", "\n", "", "%0a", "", "%0d", "")
 
 	c, err := smtp.Dial(addr)
+
 	if err != nil {
 		return err
 	}
 	defer c.Close()
+
 	if err = c.Mail(r.Replace(from)); err != nil {
 		return err
 	}
+
 	for i := range to {
 		to[i] = r.Replace(to[i])
 		if err = c.Rcpt(to[i]); err != nil {
@@ -40,9 +43,12 @@ func SendMail(addr, from, subject, body string, to []string) error {
 	if err != nil {
 		return err
 	}
+
 	err = w.Close()
+
 	if err != nil {
 		return err
 	}
+
 	return c.Quit()
 }
