@@ -119,4 +119,18 @@ func createTables() {
 		fmt.Println("Error creating contact_us table.")
 		panic(err)
 	}
+
+	createSubscriptionsTable := `
+		CREATE TABLE IF NOT EXISTS subscriptions (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			email TEXT NOT NULL,
+			created_at DATETIME NOT NULL,
+			updated_at DATETIME NOT NULL
+		);
+	`
+	_, err = DB.Exec(createSubscriptionsTable)
+	if err != nil {
+		fmt.Println("Error creating subscriptions table.")
+		panic(err)
+	}
 }

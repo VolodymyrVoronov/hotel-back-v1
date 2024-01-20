@@ -18,8 +18,7 @@ func ContactUs(c *gin.Context) {
 		return
 	}
 
-	err = services.SendMail("127.0.0.1:1025", (&mail.Address{Name: contactUs.Name, Address: contactUs.Email}).String(), "Contact Us", contactUs.Message, []string{(&mail.Address{Name: "to name", Address: "to@example.com"}).String()})
-
+	err = services.SendMail("127.0.0.1:1025", (&mail.Address{Name: contactUs.Name, Address: contactUs.Email}).String(), "Contact Us", contactUs.Message, []string{(&mail.Address{Name: "Admin", Address: "to@example.com"}).String()})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
