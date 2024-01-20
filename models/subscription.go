@@ -54,6 +54,7 @@ func CheckSubscription(email string) (bool, error) {
 	row := stmt.QueryRow(email)
 
 	var subscriptionEmail string
+
 	err = row.Scan(&subscriptionEmail)
 	if err != nil {
 		if err == sql.ErrNoRows {
