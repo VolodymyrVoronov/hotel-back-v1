@@ -19,13 +19,13 @@ func RegisterSubscription(c *gin.Context) {
 		return
 	}
 
-	isSubscriptionExist, err := models.CheckSubscription(subscription.Email)
+	isSubscriptionExisted, err := models.CheckSubscription(subscription.Email)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	if isSubscriptionExist {
+	if isSubscriptionExisted {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "You are already subscribed to our newsletter"})
 		return
 	}
