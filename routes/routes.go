@@ -13,6 +13,8 @@ func RegisterRoutes(server *gin.Engine) {
 
 	server.POST("/availability", CheckRoomAvailability)
 
+	server.POST("/contact-us", ContactUs)
+
 	server.POST("/roles", CreateRole)
 	server.GET("/roles", GetRoles)
 
