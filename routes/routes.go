@@ -16,12 +16,11 @@ func RegisterRoutes(server *gin.Engine) {
 	server.POST("/contact-us", ContactUs)
 	server.POST("/subscription", RegisterSubscription)
 
-	server.POST("/roles", CreateRole)
-	server.GET("/roles", GetRoles)
-
-	server.POST("/register", Register)
 	server.POST("/login", Login)
 
 	authenticated := server.Group("/admin")
 	authenticated.Use(middlewares.Authenticate)
+	authenticated.POST("/register", Register)
+	authenticated.POST("/roles", CreateRole)
+	authenticated.GET("/roles", GetRoles)
 }
