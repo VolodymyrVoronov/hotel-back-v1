@@ -27,7 +27,7 @@ func Register(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	var user models.User
+	var user models.UserLogin
 
 	err := c.ShouldBindJSON(&user)
 	if err != nil {
@@ -47,5 +47,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "User logged in successfully", "token": token})
+	role, err := models.GetUserRole(user.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Profile logged in successfully", "token": token, "role": role})
 }

@@ -17,12 +17,18 @@ type User struct {
 	UpdatedAt time.Time
 }
 
+type UserLogin struct {
+	ID       int64
+	Email    string `binding:"required"`
+	Password string `binding:"required"`
+}
+
 func (u *User) InsertUser() error {
 	query := `
 		INSERT INTO users
-			(email, password, created_at, updated_at)
+			(email, password, role_type, created_at, updated_at)
 		VALUES
-			(?, ?, ?, ?)
+			(?, ?, ?, ?, ?)
 	`
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
@@ -35,7 +41,7 @@ func (u *User) InsertUser() error {
 		return err
 	}
 
-	result, err := stmt.Exec(u.Email, hashedPassword, time.Now(), time.Now())
+	result, err := stmt.Exec(u.Email, hashedPassword, u.Role, time.Now(), time.Now())
 	if err != nil {
 		return err
 	}
@@ -50,7 +56,7 @@ func (u *User) InsertUser() error {
 	return nil
 }
 
-func (u *User) ValidateCredentials() error {
+func (u *UserLogin) ValidateCredentials() error {
 	query := `
 		SELECT 
 			id, password
@@ -63,7 +69,8 @@ func (u *User) ValidateCredentials() error {
 	var retrievedPassword string
 
 	row := db.DB.QueryRow(query, u.Email)
-	if err := row.Err(); err != nil {
+	err := row.Scan(&u.ID, &retrievedPassword)
+	if err != nil {
 		return errors.New("invalid credentials")
 	}
 
@@ -74,4 +81,20 @@ func (u *User) ValidateCredentials() error {
 	}
 
 	return nil
+}
+
+func GetUserRole(email string) (string, error) {
+	query := `SELECT role_type FROM users WHERE email = ?`
+
+	row := db.DB.QueryRow(query, email)
+
+	var role string
+
+	err := row.Scan(&role)
+
+	if err != nil {
+		return "", err
+	}
+
+	return role, nil
 }
