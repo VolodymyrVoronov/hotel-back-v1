@@ -18,9 +18,9 @@ func main() {
 	server.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173"},
 		AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "OPTIONS", "DELETE"},
-		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		MaxAge:           12 * time.Hour,
 	}))
 

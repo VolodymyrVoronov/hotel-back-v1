@@ -3,12 +3,13 @@ package middlewares
 import (
 	"hotel-back-v1/utils"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Authenticate(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	token := strings.TrimPrefix(c.Request.Header.Get("Authorization"), "Bearer ")
 
 	if token == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
