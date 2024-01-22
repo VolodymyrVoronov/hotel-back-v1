@@ -8,7 +8,6 @@ import (
 
 func RegisterRoutes(server *gin.Engine) {
 	server.POST("/bookings", CreateBooking)
-	server.GET("/bookings", GetAllBookings)
 	server.POST("/bookings-room", GetSelectedBooking)
 
 	server.POST("/availability", CheckRoomAvailability)
@@ -20,7 +19,14 @@ func RegisterRoutes(server *gin.Engine) {
 
 	authenticated := server.Group("/admin")
 	authenticated.Use(middlewares.Authenticate)
+
 	authenticated.POST("/register", Register)
+
+	authenticated.GET("/bookings", GetAllBookings)
+
+	authenticated.GET("/contact-us", GetAllContactUs)
+	authenticated.GET("/subscription", GetAllSubscriptions)
+
 	authenticated.POST("/roles", CreateRole)
 	authenticated.GET("/roles", GetRoles)
 }

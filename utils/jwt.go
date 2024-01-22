@@ -41,7 +41,7 @@ func ValidateToken(tokenStr string) error {
 		return errors.New("invalid token")
 	}
 
-	if claims["email"].(string) == "" || claims["userId"].(int64) == 0 {
+	if claims["email"].(string) == "" || claims["userId"].(float64) == 0 {
 		return errors.New("claims are empty")
 	}
 

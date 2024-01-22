@@ -32,3 +32,13 @@ func ContactUs(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Email sent successfully"})
 }
+
+func GetAllContactUs(c *gin.Context) {
+	contactUs, err := models.SelectAllContactUs()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, contactUs)
+}

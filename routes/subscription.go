@@ -10,6 +10,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetAllSubscriptions(c *gin.Context) {
+	subscriptions, err := models.SelectAllSubscriptions()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, subscriptions)
+}
+
 func RegisterSubscription(c *gin.Context) {
 	var subscription models.Subscription
 

@@ -14,6 +14,36 @@ type ContactUs struct {
 	UpdatedAt time.Time
 }
 
+func SelectAllContactUs() ([]ContactUs, error) {
+	query := `
+		SELECT
+			id, name, email, message, created_at, updated_at
+		FROM
+			contact_us
+	`
+
+	rows, err := db.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var messages []ContactUs
+
+	for rows.Next() {
+		var message ContactUs
+
+		err := rows.Scan(&message.ID, &message.Name, &message.Email, &message.Message, &message.CreatedAt, &message.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		messages = append(messages, message)
+	}
+
+	return messages, nil
+}
+
 func (c *ContactUs) InsertContactUs() error {
 	query := `
 		INSERT INTO contact_us

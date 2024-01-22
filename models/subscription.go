@@ -13,6 +13,37 @@ type Subscription struct {
 	UpdatedAt time.Time
 }
 
+func SelectAllSubscriptions() ([]Subscription, error) {
+	query := `
+		SELECT
+			id, email, created_at, updated_at
+		FROM
+			subscriptions
+	`
+
+	rows, err := db.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var subscriptions []Subscription
+
+	for rows.Next() {
+		var subscription Subscription
+
+		err = rows.Scan(&subscription.ID, &subscription.Email, &subscription.CreatedAt, &subscription.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		subscriptions = append(subscriptions, subscription)
+	}
+
+	return subscriptions, nil
+}
+
 func (s *Subscription) InsertSubscription() error {
 	query := `
 		INSERT INTO subscriptions
