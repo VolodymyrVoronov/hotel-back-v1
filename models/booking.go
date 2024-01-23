@@ -43,6 +43,12 @@ type RoomAvailability struct {
 	EndDate   string `binding:"required"`
 }
 
+type ProcessedBooking struct {
+	ID        int64
+	Processed bool
+	UpdatedAt time.Time
+}
+
 func (b *Booking) InsertBooking() error {
 	query := `
 		INSERT INTO bookings
@@ -58,6 +64,30 @@ func (b *Booking) InsertBooking() error {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(b.RoomID, b.RoomPrice, b.TotalPrice, b.TotalBookedDays, b.Name, b.Email, b.Phone, b.Message, b.StartDate, b.EndDate, b.Processed, time.Now(), time.Now())
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (pb *ProcessedBooking) UpdateBooking() error {
+	query := `
+		UPDATE bookings
+		SET
+			processed = ?,
+			updated_at = ?
+		WHERE
+			id = ?
+	`
+
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(pb.Processed, time.Now(), pb.ID)
 	if err != nil {
 		return err
 	}

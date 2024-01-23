@@ -62,6 +62,24 @@ func GetAllBookings(c *gin.Context) {
 	c.JSON(http.StatusOK, bookings)
 }
 
+func ProcessBooking(c *gin.Context) {
+	var processedBooking models.ProcessedBooking
+
+	err := c.ShouldBindJSON(&processedBooking)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = processedBooking.UpdateBooking()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Booking updated successfully", "processed": true})
+}
+
 func GetSelectedBooking(c *gin.Context) {
 	var booking models.BookedRoomID
 

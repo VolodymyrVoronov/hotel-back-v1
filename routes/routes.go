@@ -23,6 +23,7 @@ func RegisterRoutes(server *gin.Engine) {
 	authenticated.POST("/register", Register)
 
 	authenticated.GET("/bookings", GetAllBookings)
+	authenticated.POST("/bookings-process", ProcessBooking)
 
 	authenticated.GET("/contact-us", GetAllContactUs)
 	authenticated.GET("/subscription", GetAllSubscriptions)
