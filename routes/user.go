@@ -17,6 +17,12 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	isAdmin := user.CheckRole("admin")
+	if !isAdmin {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Only one admin is allowed"})
+		return
+	}
+
 	err = user.InsertUser()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -54,4 +60,32 @@ func Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Profile logged in successfully", "token": token, "role": role})
+}
+
+func GetAllUsers(c *gin.Context) {
+	users, err := models.SelectAllUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"users": users})
+}
+
+func DeleteUser(c *gin.Context) {
+	var user models.DeleteUser
+
+	err := c.ShouldBindJSON(&user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = user.DeleteUserFromDB()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
 }

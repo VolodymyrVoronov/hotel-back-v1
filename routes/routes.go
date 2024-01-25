@@ -30,4 +30,7 @@ func RegisterRoutes(server *gin.Engine) {
 
 	authenticated.POST("/roles", CreateRole)
 	authenticated.GET("/roles", GetRoles)
+
+	authenticated.GET("/users", GetAllUsers)
+	authenticated.DELETE("/users", DeleteUser)
 }

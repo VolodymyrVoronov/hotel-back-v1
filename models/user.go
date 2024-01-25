@@ -23,6 +23,40 @@ type UserLogin struct {
 	Password string `binding:"required"`
 }
 
+type DeleteUser struct {
+	ID int64
+}
+
+func SelectAllUsers() ([]User, error) {
+	query := `
+		SELECT
+			id, email, role_type, created_at, updated_at
+		FROM
+			users
+	`
+
+	rows, err := db.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []User
+
+	for rows.Next() {
+		var user User
+
+		err := rows.Scan(&user.ID, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
 func (u *User) InsertUser() error {
 	query := `
 		INSERT INTO users
@@ -56,6 +90,28 @@ func (u *User) InsertUser() error {
 	return nil
 }
 
+func (u *DeleteUser) DeleteUserFromDB() error {
+	query := `
+		DELETE FROM
+			users
+		WHERE
+			id = ?
+	`
+
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(u.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (u *UserLogin) ValidateCredentials() error {
 	query := `
 		SELECT 
@@ -81,6 +137,10 @@ func (u *UserLogin) ValidateCredentials() error {
 	}
 
 	return nil
+}
+
+func (u *User) CheckRole(role string) bool {
+	return u.Role == role
 }
 
 func GetUserRole(email string) (string, error) {
