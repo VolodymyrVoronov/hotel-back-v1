@@ -18,7 +18,7 @@ func Register(c *gin.Context) {
 	}
 
 	isAdmin := user.CheckRole("admin")
-	if !isAdmin {
+	if isAdmin {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Only one admin is allowed"})
 		return
 	}
